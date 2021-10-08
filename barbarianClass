@@ -1,0 +1,89 @@
+#include <iostream>
+using namespace std;
+
+class player
+{
+  public:
+    int damage;
+    int enemyDamage;
+    int enemyHealth;
+    int health;
+    player(int hp);
+    /*player(int hp)
+    {
+      so when you call it in the main we can have the three chracters have different health values.
+      health = hp;
+    }*/
+    void setHealth(int h)
+    {
+      health = h;
+    }
+    int getHealth(){
+      return health;
+    }
+    
+    
+    
+};
+
+//main class
+//I just used stephii's as a template to get mine started.
+class barbarian : public player 
+{
+  public:
+
+    int damage;
+    int enemyDamage;
+    int health = 200;
+
+    barbarian(int d = 0, int ed = 0, int hp = 100);
+
+    //this allows for any amount of damage to be set for the new health value.
+    void doplayerdmg(int dmg)
+    {
+      damage = health - dmg;
+      setHealth(dmg);
+    }
+
+    //player attack for barbarian
+    int player_attack()
+    { 
+      int attack_selection;
+      cout << "How will you attack?" << endl;
+      cout << "1.) Wild Swing" << endl << "2.) Flaming Axe" << endl << "3.) Primal Rage" << endl ;
+      cin >> attack_selection;
+
+      //input validation for attack
+      while (attack_selection != 1 && attack_selection != 2 && attack_selection != 3)
+      {
+        cout << "Invalid input, please select 1-3: ";
+        cin >> attack_selection;
+      }
+
+      //attack 1
+      if (attack_selection == 1)
+      {
+        health -= 10;
+        damage = 25;
+        cout << "You grip your axe with both hands and begin to swing with no reagard to yourself or your surroundings and deal " << damage << " damage." << endl;
+      }
+
+      //attack 2
+      else if (attack_selection == 2)
+      {
+        health -= 20;
+        damage = 60;
+        cout << "You activate your flame rune and go for an allout attack dealing " << damage << " damage." << endl;
+      }
+
+      //attack 3
+      else if (attack_selection == 3)
+      {
+        damage = 0;
+        health += 100;
+        cout << "You focus, steeling your body for combat and recover " << 100 << " hit points." << endl;
+      }
+      return damage;
+    }
+};
+
