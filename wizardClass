@@ -1,0 +1,62 @@
+#include <iostream>
+#include "barb.cpp"
+
+using namespace std;
+
+
+
+//create derived character wizard class from base player class
+class wizard : public player
+{
+  public:
+  
+    int damage;
+    int enemyDamage;
+    int health = 100;
+
+    
+    wizard(int = 0, int=0, int = 100);
+    
+    
+  //Function to attack. Gives player 2 options for attacks.
+   int player_attack(){ 
+
+    int attack_selection;
+    cout<< "How will you proceed?: "<<endl;
+    cout << "1.) Lightning Strike" << endl << "2.) Spell of Confusion " << endl;
+    
+    cin >> attack_selection;
+
+    //input validation for attack selection
+    while (attack_selection != 1 && attack_selection != 2){
+      cout << "Invalid input, please select 1 or 2: ";
+      cin >> attack_selection;
+    }
+
+    //attack 1
+    if (attack_selection == 1){
+      srand(time(0));
+      damage = rand() % 50 + 25;
+      cout << "You use your powers to summon a lightning strike against your enemy which causes "<<damage<<" damage to the enemy"<<endl;
+
+
+    }
+
+    //attack 2
+    else if (attack_selection == 2){
+      srand(time(0));
+      damage = rand() % 80 + 40;
+      cout << "You use magic to cast a spell of confusion which causes "<<damage<<" damage to enemy!"<<endl;
+    }
+    
+    return damage;
+}
+
+   
+
+};
+
+
+
+
+
