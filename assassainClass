@@ -1,0 +1,43 @@
+#include "wizard.cpp"
+using namespace std;
+
+
+class Assassain : public player{
+
+public: 
+int damage;
+int enemyDamage;
+int health = 200;
+
+Assassain(int = 0, int = 0, int = 100);
+
+int player_attack(){ // This function pulls up either action of attacking
+
+
+  int attack_selection;
+  cout << "1.) Shuriken Toss" << endl << "2.) Katar Stab" << endl;
+  
+  cin >> attack_selection;
+
+  //input validation for attack
+  while (attack_selection != 1 && attack_selection != 2){
+    cout << "Invalid input, please select 1 or 2: ";
+    cin >> attack_selection;
+  }
+
+  //attack 1
+  if (attack_selection == 1){
+    srand(time(0));
+    damage = rand() % 50 + 25;
+    cout << "You and your shadow throw your shuriken and deal " << damage << " damage." << endl;
+  }
+
+  //attack 2
+  else if (attack_selection == 2){
+    srand(time(0));
+    damage = rand() % 80 + 40;
+    cout << "You and your shaodw stab the enemy and deal " << damage << " damage." << endl;
+  }
+  return damage;
+}
+};
