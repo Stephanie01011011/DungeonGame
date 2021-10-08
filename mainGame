@@ -1,0 +1,1350 @@
+/*Creators: Marcus Jones, Caleb Kumpf, & Stephanie Livengood
+Class: CSCI201
+Date last reviewed: 10-08-2021
+Purpose: Dungeons and dragons themed game, where player chooses a character, runs through 3 encounters. Player attacks until either player health or enemy health is depleted and then player will encounter a final enemy where they battle to the death!*/
+
+#include <iostream>
+#include "assassain.cpp"
+#include <vector>
+//#include "encounters.cpp"
+//#include "wizard.cpp"
+using namespace std;
+
+
+//function templates
+void encounter1();
+void encounter2();
+int encounter3();
+void encounter4();
+void encounter5();
+void encounter6();
+int encounter7();
+int encounter8();
+void finalencounter();
+
+
+//Parameterized constructors for player, barbarian, wizard, and assassain
+player::player(int hp){
+  
+  health = hp;
+}
+
+barbarian::barbarian(int d, int ed, int hp): player(hp){
+  damage = d;
+  enemyDamage = ed;
+  health = hp;
+}
+
+wizard::wizard(int d, int ed, int hp):player(hp){
+  damage = d;
+  enemyDamage = ed;
+  health = hp;
+}
+
+Assassain::Assassain(int d, int ed,int hp): player(hp){
+  damage = d;
+  enemyDamage = ed;
+  health = hp;
+}
+
+
+//template to calculate the final score
+template <typename T>
+T highscore( T endhp)
+{
+  T highscore = endhp * 100000;
+  return highscore;
+} 
+
+//main
+int main(){
+  
+  //variables
+  int selection;
+  int enemyhealth = 35;
+  int choice;
+
+  
+
+  //vector for our inventory
+  vector <string> inventory = {"dagger", "water", "rabbit meat", "helmet"};
+
+  //display welcome message
+  cout << "Welcome to the deep dark dungeon! For this story you will need to select a character!" << endl;
+
+  //display character menu
+  cout << "1 = Wizard " << endl << "2 = Assassin " << endl << "3 = Barbarian " << endl;
+  cin >>  selection;
+
+  //input validation for character selection
+  while(selection != 1 && selection != 2 && selection != 3){
+    cout<<"Your selection must be either 1, 2, or 3. Try again: "<<endl;
+    cin>>selection;
+
+  }
+
+  //first selection plays game as wizard
+  if(selection == 1)
+  {
+    //create wizard object
+    wizard wiz1;
+    
+    //switch case will select a random encounter
+    int randEncounter;
+    int encounterLoop = 0;
+  
+    //while loop will go through 3 encounters and stop once players health is 0.
+    while(encounterLoop < 3){
+      if (wiz1.health > 0){
+        srand(time(NULL));
+        randEncounter = rand() % 8 + 1;
+
+        //switch case chooses a random encounter
+        switch(randEncounter){
+
+          //encounter 1
+          case 1:
+          encounter1();
+          enemyhealth = 35;
+          while(wiz1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << wiz1.health << " | Golem HP: " << enemyhealth<< endl;
+            enemyhealth -= wiz1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The Golem opens it's mouth as flames spit out toward you!" << endl;
+              cout << "You take " << 20 << " points of fire damage!" << endl;
+              wiz1.health -= 20;
+              cout << endl;
+            }
+          }
+          //player loses
+          if(wiz1.health <= 0)
+          {
+            cout << "The flames engulf you as you burn into a pile of smoldering embers and ash..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "You make your way up to the golam and smash into its core with your axe! Flame escapes out of the cracks in its form as it falls apart!" <<endl;
+            cout << "YOU WIN!"<<endl;
+            
+            //add an item to vector
+            cout<<"The Golem drops a rune on the ground and you collect it."<<endl;
+            inventory.push_back("rune");
+            cout << endl;
+          }
+          break;
+
+          //encounter 2
+          case 2:
+          encounter2();
+          enemyhealth = 60;
+          while(wiz1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << wiz1.health << " | Archer HP: " << enemyhealth<< endl;
+            enemyhealth -= wiz1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The archer with deft speed lays an arrow into your chest!" << endl;
+              cout << "You take " << 25 << " points of piercing damage!" << endl;
+              wiz1.health -= 25;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(wiz1.health <= 0)
+          {
+            cout << "You feel your body slow to a crawl as another arrow is layed into you. Your body now resembles a pin cushion as you fall." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "You take arrow after arrow gripping onto life with nothing but your white hot rage. Eventually the archer has nowhere else to run. And you introduce them to the end of your axe with one final swing!" <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+          }
+          break;
+
+          //encounter 3
+          //encounter 3 sees no battle
+          case 3:
+          choice = encounter3();
+          if (choice == 1)
+          {
+            cout << "You gain 100 HP!" << endl;
+
+            //add item to vector
+            cout<<"You also find a gold coin hiding behind where the gem was. You collect it."<<endl;
+            inventory.push_back("Gold coin");
+            wiz1.health += 100;
+          } 
+          else if (choice == 2)
+          {
+            cout << "You move on." << endl;
+          }
+          break;
+
+          //encounter 4
+          case 4:
+          encounter4();
+          enemyhealth = 70;
+          while(wiz1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << wiz1.health << " | Mega Goblin HP: " << enemyhealth <<endl;
+            enemyhealth -= wiz1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The goblin with one of it's many arms lays into you!" << endl;
+              cout << "You take " << 30 << " points of piercing damage!" << endl;
+              wiz1.health -= 30;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(wiz1.health <= 0)
+          {
+            cout << "The goblin's might is far too much for you! Maybe you should of been born with more arms..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "The goblin may be tall and have six arms but its still a goblin. You use quick moves and raw strength to overpower it! It falls to the ground after your final attack." <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+
+            //add item to vector
+            cout<<"The goblin drops an iron sword, which you collect immediately."<<endl;
+            inventory.push_back("Iron sword");
+          }
+          break;
+
+          //encounter 5
+          case 5:
+          encounter5();
+          enemyhealth = 75;
+          while(wiz1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << wiz1.health << " | Undead Musician HP: " << enemyhealth<<endl;
+            enemyhealth -= wiz1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The sound of the violin shakes you to your very core, as you can feel it tearing at the fabric of your mind!" << endl;
+              cout << "You take " << 35 << " points of psychic damage!" << endl;
+              wiz1.health -= 35;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(wiz1.health <= 0)
+          {
+            cout << "The song is too much for you. You feel your strenght leave you as you are frozen in place. You feel the cold hands of the woman as she grabs your face and brings it close to her hungry maw..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "With one more good strike you shatter the violin completely. The woman shreiks in horror as she starts to sizzle and pop. Her skin begins to alight in flame and after a moment all that is left are her ash covered garments lining the floor." <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+          }
+          break;
+
+          //encounter 6
+          case 6:
+          encounter6();
+          enemyhealth = 75;
+          while(wiz1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << wiz1.health << " | Chained Dragonspawn HP: " << enemyhealth<<endl;
+            enemyhealth -= wiz1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The chained red dragon lashes out at you with its claws!" << endl;
+              cout << "You take " << 40 << " points of slashing!" << endl;
+              wiz1.health -= 40;
+              cout << endl;
+            } 
+          }
+
+          //player loses
+          if(wiz1.health <= 0)
+          {
+            cout << "As the razor sharp claws dig into you, you can see pain in the dragonspawns face. Like a caged animal it is lashing out only out of fear. Though even a newborn dragon is still a dragon at the end of the day. You feel blood begin to pour out of you as you lose consciousness..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "You grit your teeth and smash the dragon's maw with your axe. It screeches in pain as it curls into a ball wrapped in its own chains, motionless." <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+
+            //add item to vector
+            cout<<"When you search the dragons lair, you find a wolf pelt and keep it for warmth."<<endl;
+            inventory.push_back("wolf pelt");
+          }
+          break;
+
+          //encounter 7
+          case 7:
+          choice = encounter7();
+          if (choice == 1)
+          {
+            enemyhealth = 70;
+            while(wiz1.health > 0 && enemyhealth > 0)
+            {
+              cout << "Player HP: " << wiz1.health << " | Mimic HP: " << enemyhealth<<endl;
+              enemyhealth -= wiz1.player_attack();
+              cout << endl;
+              if(enemyhealth>0)
+              { 
+                cout << "The hungry chest engulfs you in its maw ripping and shredding    your body with the sharp rows of teeth lining its insides." << endl;
+                cout << "You take " << 35 << " points of slashing!" << endl;
+                wiz1.health -= 35;
+                cout << endl;
+              }
+            }
+
+            //player loses
+            if(wiz1.health <= 0)
+            {
+              cout << "The bites of the mimic are strong enough to break bone. You feel your body begin to bend under the pressure of its jaws. The last thing you hear is a loud snap. The last thing you feel is a jolt of sharp pain, followed by nothing at all..." <<endl;
+              cout << "YOU DIED!"<<endl;
+              cout << "Please re-run program to restart!"<<endl;
+            }
+
+            //player wins
+            else if(enemyhealth <= 0)
+            {
+
+              
+              cout << "The mimic is no match for your skill. It breaks almost immediately on impact from your attack." <<endl;
+              cout << "YOU WIN!"<<endl;
+              cout << endl;
+            }
+          }
+          else if (choice == 2)
+          {
+            cout << "You managed to escape and move on!" <<endl;
+            cout << endl;
+          }
+          break;
+
+          //encounter 8
+          case 8:
+          choice = encounter8();
+
+          //wrong answer, player loses
+          if (choice == 1)
+          {
+            cout << "YOU DIED!"<<endl;
+            wiz1.health = 0;
+          }
+
+          //correct answer, player wins
+          else if (choice == 2)
+          {
+            cout << "The riddle is solved and you move on."<<endl;
+            cout << endl;
+          }
+
+          //wrong answer, player loses
+          else if (choice == 3)
+          {
+            cout << "YOU DIED!"<<endl;
+            wiz1.health = 0;
+          }
+
+          //wrong answer, player loses
+          else if (choice == 4)
+          {
+            cout << "YOU DIED!"<<endl;
+            wiz1.health = 0;
+          }
+          break;
+        }
+      }
+      else
+      {
+      encounterLoop = 10;
+      }
+      encounterLoop++;
+    }
+
+    if(wiz1.health > 0)
+    {
+      //final encounter as long as player health is above 0
+      finalencounter();
+      enemyhealth = 100;
+      while(wiz1.health > 0 && enemyhealth > 0)
+      {
+        cout << "Player HP: " << wiz1.health << " | Gorethalax the Cruel HP: " << enemyhealth<<endl;
+        enemyhealth -= wiz1.player_attack();
+        cout << endl;
+        if(enemyhealth>0)
+        {
+          cout << "The massive dragon lunges at you with all its might. Breathing a torrent of hellish flame that melts the gold around you!" << endl;
+          cout << "You take " << 60 << " points of fire damage!" << endl;
+          wiz1.health -= 60;
+          cout << endl;
+        }
+      }
+
+      //player loses final battle
+      if(wiz1.health <= 0)
+      {
+        cout << "The flames are too much! You feel your inside start to boil as you try to hold on! But you feel your strength give out as you fall to your knees" <<endl;
+        cout <<"The dragon looks down on you and speaks on final time." << endl;
+        cout <<"I told you that you would die beneath me. Now lets hear you scream." <<endl;
+        cout << "The dragon presses its massive weight onto each of your limbs crushing you under him. Your screams echo throughout the cave, as your adventure ends in bloody tragedy..." << endl;
+        cout << "YOU DIED!"<<endl;
+        cout << "Please re-run program to restart!"<<endl;
+      }
+
+      //player wins final battle!
+      else if(enemyhealth <= 0)
+      {
+        cout << "You grit your teeth and dig into the melted coins below you. You begin to go numb to the pain of the heat and focus only on survival! With your newfound strength you leap into the air and lay your axe square between the dragons eyes. You feel the skull give way as your arms break beneath the force of your mighty blow!" <<endl;
+        cout<<"The dragon lets out one last roar of pain as the life in its eyes slowly leave it..." <<endl;
+        cout << "YOU WIN!"<<endl;
+        cout << endl;
+
+        cout <<"Congratulations!!!! You have bested the dragon in one on one combat and claimed his home and hoard as your own. Your story will go down in history as the the person who bested the great dragon all on your own..." <<endl;
+        cout << endl;
+
+        //display items in inventory
+        cout<< "You finish the game with a few items in your bag: "<<endl;
+        for(int i =0; i< inventory.size(); i++){
+          cout<<inventory.at(i)<<endl;
+        }
+        //passes heatlth into a template funtion to give a high score
+        cout << "Final Score!: " << highscore<int>(wiz1.health)<<endl;
+
+        cout <<"Thanks for playing!" <<endl;
+      }
+    }  
+  }
+
+  //second selection plays game as assassain
+  else if(selection == 2)
+  {
+    //create assassain object
+    Assassain a1;
+    
+    //switch case will select a random encounter
+    int randEncounter;
+    int encounterLoop = 0;
+  
+    //while loop will go through 3 encounters and stop once players health is 0.
+    while(encounterLoop < 3){
+      if (a1.health > 0){
+        srand(time(NULL));
+        randEncounter = rand() % 8 + 1;
+
+        //switch cases chooses random encounter
+        switch(randEncounter){
+
+          //encounter 1
+          case 1:
+          encounter1();
+          enemyhealth = 35;
+          while(a1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << a1.health << " | Golem HP: " << enemyhealth<< endl;
+            enemyhealth -= a1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The Golem opens it's mouth as flames spit out toward you!" << endl;
+              cout << "You take " << 20 << " points of fire damage!" << endl;
+              a1.health -= 20;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(a1.health <= 0)
+          {
+            cout << "The flames engulf you as you burn into a pile of smoldering embers and ash..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "You make your way up to the golem and smash into its core with your ! Flame escapes out of the cracks in its form as it falls apart!" <<endl;
+            cout << "YOU WIN!"<<endl;
+            
+            //add an item to vector
+            cout<<"The Golem drops a rune on the ground and you collect it."<<endl;
+            inventory.push_back("rune");
+            cout << endl;
+          }
+          break;
+
+          //encounter 2
+          case 2:
+          encounter2();
+          enemyhealth = 60;
+          while(a1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << a1.health << " | Archer HP: " << enemyhealth<< endl;
+            enemyhealth -= a1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The archer with deft speed lays an arrow into your chest!" << endl;
+              cout << "You take " << 25 << " points of piercing damage!" << endl;
+              a1.health -= 25;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(a1.health <= 0)
+          {
+            cout << "You feel your body slow to a crawl as another arrow is layed into you. Your body now resembles a pin cushion as you fall." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "You take arrow after arrow gripping onto life with nothing but your white hot rage. Eventually the archer has nowhere else to run. And you introduce them to the tip of your katar with one final swing!" <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+          }
+          break;
+
+          //encounter 3
+          //no enemy in encounter 3
+          case 3:
+          choice = encounter3();
+          if (choice == 1)
+          {
+            cout << "You gain 100 HP!" << endl;
+
+            //add item to vector
+            cout<<"You also find a gold coin hiding behind where the gem was. You collect it."<<endl;
+            inventory.push_back("Gold coin");
+            a1.health += 100;
+          } 
+          else if (choice == 2)
+          {
+            cout << "You move on." << endl;
+          }
+          break;
+
+          //encounter 4
+          case 4:
+          encounter4();
+          enemyhealth = 70;
+          while(a1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << a1.health << " | Mega Goblin HP: " << enemyhealth <<endl;
+            enemyhealth -= a1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The goblin with one of it's many arms lays into you!" << endl;
+              cout << "You take " << 30 << " points of piercing damage!" << endl;
+              a1.health -= 30;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(a1.health <= 0)
+          {
+            cout << "The goblin's might is far too much for you! Maybe you should have brought another shadow..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "The goblin may be tall and have six arms but its still a goblin. You and your shadow overpower it with your sheer power." <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+
+            //add item to vector
+            cout<<"The goblin drops an iron sword, which you collect immediately."<<endl;
+            inventory.push_back("Iron sword");
+          }
+          break;
+
+          //encounter 5
+          case 5:
+          encounter5();
+          enemyhealth = 75;
+          while(a1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << a1.health << " | Undead Musician HP: " << enemyhealth<<endl;
+            enemyhealth -= a1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The sound of the violin shakes you to your very core, as you can feel it tearing at the fabric of your mind!" << endl;
+              cout << "You take " << 35 << " points of psychic damage!" << endl;
+             a1.health -= 35;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(a1.health <= 0)
+          {
+            cout << "The song is too much for you. You feel your strenght leave you as you are frozen in place. You feel the cold hands of the woman as she grabs your face and brings it close to her hungry maw..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "With one more good strike you shatter the violin completely. The woman shreiks in horror as she starts to sizzle and pop. Her skin begins to alight in flame and after a moment all that is left are her ash covered garments lining the floor." <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+          }
+          break;
+
+          //encounter 6
+          case 6:
+          encounter6();
+          enemyhealth = 75;
+          while(a1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << a1.health << " | Chained Dragonspawn HP: " << enemyhealth<<endl;
+            enemyhealth -= a1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The chained red dragon lashes out at you with its claws!" << endl;
+              cout << "You take " << 40 << " points of slashing!" << endl;
+              a1.health -= 40;
+              cout << endl;
+            } 
+          }
+
+          //player loses
+          if(a1.health <= 0)
+          {
+            cout << "As the razor sharp claws dig into you, you can see pain in the dragonspawns face. Like a caged animal it is lashing out only out of fear. Though even a newborn dragon is still a dragon at the end of the day. You feel blood begin to pour out of you as you lose consciousness..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "Your shadow enters the killing blow to the dragonspawn and disappears in thin air." <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+
+            //add item to vector
+            cout<<"When you search the dragons lair, you find a wolf pelt and keep it for warmth."<<endl;
+            inventory.push_back("wolf pelt");
+          }
+          break;
+
+          //encounter 7
+          case 7:
+          choice = encounter7();
+          if (choice == 1)
+          {
+            enemyhealth = 70;
+            while(a1.health > 0 && enemyhealth > 0)
+            {
+              cout << "Player HP: " << a1.health << " | Mimic HP: " << enemyhealth<<endl;
+              enemyhealth -= a1.player_attack();
+              cout << endl;
+              if(enemyhealth>0)
+              { 
+                cout << "The hungry chest engulfs you in its maw ripping and shredding your body with the sharp rows of teeth lining its insides." << endl;
+                cout << "You take " << 35 << " points of slashing!" << endl;
+                a1.health -= 35;
+                cout << endl;
+              }
+            }
+
+            //player loses
+            if(a1.health <= 0)
+            {
+              cout << "The bites of the mimic are strong enough to break bone. You feel your body begin to bend under the pressure of its jaws. The last thing you hear is a loud snap. The last thing you feel is a jolt of sharp pain, followed by nothing at all..." <<endl;
+              cout << "YOU DIED!"<<endl;
+              cout << "Please re-run program to restart!"<<endl;
+            }
+
+            //player wins
+            else if(enemyhealth <= 0)
+            {
+
+              
+              cout << "The mimic is no match for your skill. It breaks almost immediately on impact from your attack." <<endl;
+              cout << "YOU WIN!"<<endl;
+              cout << endl;
+            }
+          }
+          else if (choice == 2)
+          {
+            cout << "You managed to escape and move on!" <<endl;
+            cout << endl;
+          }
+          break;
+
+          //encounter 8
+          case 8:
+          choice = encounter8();
+
+          //wrong answer, player loses
+          if (choice == 1)
+          {
+            cout << "YOU DIED!"<<endl;
+            a1.health = 0;
+          }
+
+          //correct answer, player wins
+          else if (choice == 2)
+          {
+            cout << "The riddle is solved and you move on."<<endl;
+            cout << endl;
+          }
+
+          //wrong answer, player loses
+          else if (choice == 3)
+          {
+            cout << "YOU DIED!"<<endl;
+            a1.health = 0;
+          }
+
+          //wrong answer, player loses
+          else if (choice == 4)
+          {
+            cout << "YOU DIED!"<<endl;
+            a1.health = 0;
+          }
+          break;
+        }
+      }
+      else{
+      encounterLoop = 10;
+      }
+      encounterLoop++;
+    }
+    if(a1.health > 0)
+    {
+      //final encounter
+      finalencounter();
+      enemyhealth = 100;
+      while(a1.health > 0 && enemyhealth > 0)
+      {
+        cout << "Player HP: " << a1.health << " | Gorethalax the Cruel HP: " << enemyhealth<<endl;
+        enemyhealth -= a1.player_attack();
+        cout << endl;
+        if(enemyhealth>0)
+        {
+          cout << "The massive dragon lunges at you with all its might. Breathing a torrent of hellish flame that melts the gold around you!" << endl;
+          cout << "You take " << 60 << " points of fire damage!" << endl;
+          a1.health -= 60;
+          cout << endl;
+        }
+      }
+      //player loses
+      if(a1.health <= 0)
+      {
+        cout << "The flames are too much! You feel your inside start to boil as you try to hold on! But you feel your strength give out as you fall to your knees" <<endl;
+        cout <<"The dragon looks down on you and speaks on final time." << endl;
+        cout <<"I told you that you would die beneath me. Now lets hear you scream." <<endl;
+        cout << "The dragon presses its massive weight onto each of your limbs crushing you under him. Your screams echo throughout the cave, as your adventure ends in bloody tragedy..." << endl;
+        cout << "YOU DIED!"<<endl;
+        cout << "Please re-run program to restart!"<<endl;
+      }
+
+      //player wins
+      else if(enemyhealth <= 0)
+      {
+        cout << "You grit your teeth and dig into the melted coins below you. You begin to go numb to the pain of the heat and focus only on survival! With your newfound strength you leap into the air as you and your shadow throw your shuriken deep into the dragon's flesh. You see the shuriken rip through and decapitate the dragon!" <<endl;
+        cout<<"The dragon's head lands directly in front of you and the glow in its eyes fades away forever..." <<endl;
+        cout << "YOU WIN!"<<endl;
+        cout << endl;
+
+        cout <<"Congratulations!!!! You have bested the dragon in one on one combat and claimed his home and hoard as your own. Your story will go down in history as the the person who bested the great dragon all on your own..." <<endl;
+        cout << endl;
+
+        //display items in inventory
+        cout<< "You finish the game with a few items in your bag: "<<endl;
+        for(int i =0; i< inventory.size(); i++){
+          cout<<inventory.at(i)<<endl;
+        }
+        //passes heatlth into a template funtion to give a high score
+        cout << "Final Score!: " << highscore<int>(a1.health)<<endl;
+
+        cout <<"Thanks for playing!" <<endl;
+      }
+    }
+   
+  } 
+  
+  //third selection plays game as barbarian
+  else if (selection == 3)
+  {
+    //create barbarian object
+    barbarian barb1;
+    // I created a switch case so that it selects random functions.
+    int randEncounter;
+    int encounterLoop = 0;
+
+    while(encounterLoop < 3)
+    {
+      if (barb1.health > 0)
+      {
+        srand(time(NULL));
+        randEncounter = rand() % 8 + 1;
+        
+        switch(randEncounter)
+        {
+          //encounter 1
+          case 1:
+          encounter1();
+          enemyhealth = 35;
+          while(barb1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << barb1.health << " | Golem HP: " << enemyhealth<< endl;
+            enemyhealth -= barb1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The Golam opens it's mouth as flames spit out toward you!" << endl;
+              cout << "You take " << 20 << " points of fire damage!" << endl;
+              barb1.health -= 20;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(barb1.health <= 0)
+          {
+            cout << "The flames engulf you as you burn into a pile of smoldering embers and ash..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "You make your way up to the golam and smash into its core with your axe! Flame escapes out of the cracks in its form as it falls apart!" <<endl;
+
+            //add item to inventory
+            cout<<"The Golem drops a rune on the ground and you collect it."<<endl;
+            inventory.push_back("rune");
+            cout << endl;
+
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+          }
+          break;
+
+          //encoutner 2
+          case 2:
+          encounter2();
+          enemyhealth = 60;
+          while(barb1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << barb1.health << " | Archer HP: " << enemyhealth<< endl;
+            enemyhealth -= barb1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The arcer with deft speed lays an arrow into your chest!" << endl;
+              cout << "You take " << 25 << " points of piercing damage!" << endl;
+              barb1.health -= 25;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(barb1.health <= 0)
+          {
+            cout << "You feel your body slow to a crawl as another arrow is layed into you. Your body now resembles a pin cushion as you fall." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "You take arrow after arrow gripping onto life with nothing but your white hot rage. Eventually the archer has nowhere else to run. And you entroduce them to the to end your axe with one final swing!" <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+          }
+          break;
+
+          //encoutner 3
+          //no enemy in encounter 3
+          case 3:
+          choice = encounter3();
+          if (choice == 1)
+          {
+            cout << "You gain 100 HP!" << endl;
+            barb1.health += 100;
+
+            //add item to inventory
+            cout<<"You also find a gold coin hiding behind where the gem was. You collect it."<<endl;
+            inventory.push_back("Gold coin");
+            cout <<endl;
+          } 
+          else if (choice == 2)
+          {
+            cout << "You move on." << endl;
+          }
+          break;
+
+          //encoutner 4
+          case 4:
+          encounter4();
+          enemyhealth = 70;
+          while(barb1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << barb1.health << " | Mega Goblin HP: " << enemyhealth <<endl;
+            enemyhealth -= barb1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The goblin with one if it's many arms lays into you!" << endl;
+              cout << "You take " << 30 << " points of piercing damage!" << endl;
+              barb1.health -= 30;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(barb1.health <= 0)
+          {
+            cout << "The goblin's might is far too much for you! Maybe you should of been born with more arms..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "The goblin may be tall and have six arms but its still a goblin. You use quick moves and raw strength to overpower it! It falls to the ground after your final attack." <<endl;
+
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+
+            //add item to inventory
+            cout<<"The goblin drops an iron sword, which you collect immediately."<<endl;
+            inventory.push_back("Iron sword");            
+          }
+          break;
+
+          //encoutner 5
+          case 5:
+          encounter5();
+          enemyhealth = 75;
+          while(barb1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << barb1.health << " | Undead Musician HP: " << enemyhealth<<endl;
+            enemyhealth -= barb1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The sound of the violin shakes you to your very core, as you can feel it tearing at the fabric of your mind!" << endl;
+              cout << "You take " << 35 << " points of psychic damage!" << endl;
+              barb1.health -= 35;
+              cout << endl;
+            }
+          }
+
+          //player loses
+          if(barb1.health <= 0)
+          {
+            cout << "The song is too much for you. You feel your strenght leave you as you are frozen in place. You feel the cold hands of the woman as she grabs your face and brings it close to her hungry maw..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "With one more good strike you shatter the violin completely. The woman shreiks in horror as she starts to sizzle and pop. Her skin begins to alight in flame and after a moment all that is left are her ash covered garments lining the floor." <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+          }
+          break;
+
+          //encoutner 6
+          case 6:
+          encounter6();
+          enemyhealth = 75;
+          while(barb1.health > 0 && enemyhealth > 0)
+          {
+            cout << "Player HP: " << barb1.health << " | Chained Dragonspawn HP: " << enemyhealth<<endl;
+            enemyhealth -= barb1.player_attack();
+            cout << endl;
+            if(enemyhealth>0)
+            {
+              cout << "The chained red dragon lashes out at you with its claws!" << endl;
+              cout << "You take " << 40 << " points of slashing!" << endl;
+              barb1.health -= 40;
+              cout << endl;
+            } 
+          }
+
+          //player loses
+          if(barb1.health <= 0)
+          {
+            cout << "As the razor sharp claws dig into you, you can see pain in the dragonspawns face. Like a caged animal it is lashing out only out of fear. Though even a newborn dragon is still a dragon at the end of the day. You feel blood begin to pour out of you as you lose consciousness..." <<endl;
+            cout << "YOU DIED!"<<endl;
+            cout << "Please re-run program to restart!"<<endl;
+          }
+
+          //player wins
+          else if(enemyhealth <= 0)
+          {
+            cout << "You grit your teeth and smash the dragon's maw with your axe. It screeches in pain as it curls into a ball wrapped in its own chains, motionless." <<endl;
+            cout << "YOU WIN!"<<endl;
+            cout << endl;
+
+            //add item to inventory
+            cout<<"When you search the dragons lair, you find a wolf pelt and keep it for warmth."<<endl;
+            inventory.push_back("wolf pelt");
+          }
+          break;
+
+          //encoutner 7
+          case 7:
+          choice = encounter7();
+          if (choice == 1)
+          {
+            enemyhealth = 70;
+            while(barb1.health > 0 && enemyhealth > 0)
+            {
+              cout << "Player HP: " << barb1.health << " | Mimic HP: " << enemyhealth<<endl;
+              enemyhealth -= barb1.player_attack();
+              cout << endl;
+              if(enemyhealth>0)
+              { 
+                cout << "The hungry chest engulfs you in its maw ripping and shredding    your body with the sharp rows of teeth lining its insides." << endl;
+                cout << "You take " << 35 << " points of slashing!" << endl;
+                barb1.health -= 35;
+                cout << endl;
+              }
+            }
+
+            //player loses
+            if(barb1.health <= 0)
+            {
+              cout << "The bites of the mimic are strong enough to break bone. You feel your body begin to bend under the pressure of its jaws. The last thing you hear is a loud snap. The last thing you feel is a jolt of sharp pain, followed by nothing at all..." <<endl;
+              cout << "YOU DIED!"<<endl;
+              cout << "Please re-run program to restart!"<<endl;
+            }
+
+            //player wins
+            else if(enemyhealth <= 0)
+            {
+              cout << "The mimic is no match for your skill. It breaks almost immediately on impact from your attack."  <<endl;
+              cout << "YOU WIN!"<<endl;
+              cout << endl;
+            }
+          }
+          else if (choice == 2)
+          {
+            cout << "You managed to escape and move on!" <<endl;
+            cout << endl;
+          }
+          break;
+
+          //encoutner 8
+          case 8:
+          choice = encounter8();
+
+          //wrong answer, player loses
+          if (choice == 1)
+          {
+            cout << "YOU DIED!"<<endl;
+            barb1.health = 0;
+          }
+
+          //correct answer, player wins
+          else if (choice == 2)
+          {
+            cout << "The riddle is solved and you move on."<<endl;
+            cout << endl;
+          }
+          
+          //wrong answer, player loses
+          else if (choice == 3)
+          {
+            cout << "YOU DIED!"<<endl;
+            barb1.health = 0;
+          }
+
+          //wrong answer, player loses
+          else if (choice == 4)
+          {
+            cout << "YOU DIED!"<<endl;
+            barb1.health = 0;
+          }
+          
+          break;
+        }
+      }
+      else{
+      encounterLoop = 10;
+      }
+      encounterLoop++;
+    }
+    //This is where final battle will occur if the player gets this far.
+    if(barb1.health > 0)
+    {
+      finalencounter();
+      enemyhealth = 100;
+      while(barb1.health > 0 && enemyhealth > 0)
+      {
+        cout << "Player HP: " << barb1.health << " | Gorethalax the Cruel HP: " << enemyhealth<<endl;
+        enemyhealth -= barb1.player_attack();
+        cout << endl;
+        if(enemyhealth>0)
+        {
+          cout << "The massive dragon lunges at you with all its might. Breathing a torrent of hellish flame that melts the gold around you!" << endl;
+          cout << "You take " << 60 << " points of fire damage!" << endl;
+          barb1.health -= 60;
+          cout << endl;
+        }
+      }
+
+      //player loses
+      if(barb1.health <= 0)
+      {
+        cout << "The flames are too much! You feel your inside start to boil as you try to hold on! But you feel your strength give out as you fall to your knees" <<endl;
+        cout <<"The dragon looks down on you and speaks on final time." << endl;
+        cout <<"I told you that you would die beneath me. Now lets hear you scream." <<endl;
+        cout << "The dragon presses its massive weight onto each of your limbs crushing you under him. Your screams echo throughout the cave, as your adventure ends in bloody tragedy..." << endl;
+        cout << "YOU DIED!"<<endl;
+        cout << "Please re-run program to restart!"<<endl;
+      }
+
+      //player wins
+      else if(enemyhealth <= 0)
+      {
+        cout << "You grit your teeth and dig into the melted coins below you. You begin to go numb to the pain of the heat and focus only on survival! With your newfound strength you leap into the air and lay your axe square between the dragons eyes. You feel the skull give way as your arms break beneath the force of your mighty blow!" <<endl;
+        cout<<"The dragon lets out one last roar of pain as the life in its eyes slowly leave it..." <<endl;
+        cout << "YOU WIN!"<<endl;
+        cout << endl;
+
+        cout <<"Congratulations!!!! You have bested the dragon in one on one combat and claimed his home and hoard as your own. Your story will go down in history as the the person who bested the great dragon all on your own..." <<endl;
+        cout << endl;
+        
+        //display items in inventory
+        cout<< "You finish the game with a few items in your bag: "<<endl;
+        for(int i =0; i< inventory.size(); i++){
+          cout<<inventory.at(i)<<endl;
+        }
+
+        //display final score
+        cout << "Final Score!: " << highscore<int>(barb1.health)<<endl;
+
+        cout <<"Thanks for playing!" <<endl;
+      }
+    }
+  }
+
+  //end of int main
+}
+
+
+//encounters functions
+void encounter1(){
+  // Display fire golem encounter
+  
+  cout << "**************************************************************"<<endl;
+  cout << "You walk into a well lit room with a rock like statue in the center. As you approach the statue the torches lighting the walls of the room begin to fade as the flame travels from the walls to the statue right in front of you. You take a step back as the statue begins to ignite and become animated with life. As the fire radiates from the creature it lights the room as the golem like creature slams the ground in anger." << endl;
+  cout << "**************************************************************"<<endl;
+}
+
+void encounter2(){
+  // Display archer encounter
+  cout << "**************************************************************"<<endl;
+  cout << "As you begin to exit a small corridor into a much larger area, an arrow whims passed your head as you narrowly dodge it. You look towards the end of the room to see an archer retrieving another arrow from her quiver getting ready to fire another." << endl;
+  cout << "**************************************************************"<<endl;
+}
+
+int encounter3(){
+  // Displays non-enemy encounter.
+  int encounter3selection;
+  cout << "**************************************************************"<<endl;
+  cout << "You see a faint glow in the wall and slowly approach it. As you get closer you notice a floating gem in the wall, very curious as to what it does. Do you choose to touch it?" << endl << "1.) Yes" << endl << "2.) No" << endl;
+  cout << "**************************************************************"<<endl;
+  cin >> encounter3selection;
+
+  //input validation for selection
+  while (encounter3selection != 1 && encounter3selection != 2){
+    cout << "Enter a valid input (either 1 or 2): ";
+    cin >> encounter3selection;
+  }
+  if (encounter3selection == 1){
+    cout << "You reach your hand to grab the gem and when you touch it, the gem disappears and courses into your body as you feel stronger instantly, you then continue." << endl;
+  }
+  else{
+    cout << "You continue on, deciding to not examine the gem any longer." << endl;
+  }
+  return encounter3selection;
+}
+
+void encounter4(){
+
+  //Display encounter with Goblin
+  cout << "**************************************************************"<<endl;
+  cout<<"As you walk through the dungeon you notice a light peeking through the floor ahead. You run over to the light to investigate and suddenly drop through the floor! When you finally get to your feet a 6 armed, 10 foot tall Goblin is standing before you. "<<endl;
+  cout << "**************************************************************"<<endl;
+  
+    
+}
+void encounter5(){
+  //display encounter with undead violin player
+  cout << "**************************************************************"<<endl;
+  cout<<"You hear a sound coming from around a dark corner that sounds eerily familiar. You walk along a pitch black hallway and realize you are hearing a violin. It's a song your mother used to play for you as a child. You find the source, but it is not what you expected. The musician is no longer apart of the living, but they are still hungry...for flesh.: "<<endl;
+  cout << "**************************************************************"<<endl;
+}
+void encounter6(){
+  //display encounter with newborn dragon
+  cout << "**************************************************************"<<endl;
+  cout<<"As you are walking, almost aimlessly, around the dungeon, you hear metal clinking and a rustling sound that sounds like it was made by someone or something much larger than yourself. You move towards it, but not without fear. You turn a corner and are face to face with a massive newborn dragon!: "<<endl;
+  cout << "**************************************************************"<<endl;
+}
+int encounter7()
+{
+  int choice;
+  cout << "**************************************************************"<<endl;
+  cout << "As you walk down the dark cold halls of the dungeon you get the feeling that you are being watched. " << endl;
+  cout << endl;
+  cout << "You servy the room and see at the far end of the room is a beautiful treasure chest! It's metal reinforcements are a shiny gold and its wood looks sturdy!" << endl;
+  cout << endl;
+  cout << "will you open the chest?" << endl << "1 = yes" << endl << "2 = no" << endl;
+  cin >> choice;
+
+  //input validation for choice
+  while(choice != 1 && choice != 2){
+    cout<<"You must select 1 or 2. Try again: "<<endl;
+    cin>>choice;
+  }
+  cout << "**************************************************************"<<endl;
+  if (choice == 1)
+  {
+    cout << "As you approch the chest you notice something odd. The chest is not sitting still, its breathing!" << endl << "The chest opens wide on its own reveling sharp yellow teeth lining the fleshy inside!" << endl << "The chest was actually a mimic in disguise! And it lashes out at you before you can move away."<< endl;;
+
+    //then the fighting moves are displayed and combat begins with the mimic.
+  } 
+  else
+  {
+    cout << "You don't trust the chest, something seems off. You look for an exit, and at the other end of the room you spy the way out of here." << endl << "You move with great haste only to hear something approch behinde you." << endl << "You break for the door and glace at what was chasing you through the last moments before the door closes behide you." << endl << "You see your pursuer this whole time was the chest! Though more accuratly somthing disguised like the chest." << endl << "It's fleshy insides lash out at the door with a blood curtling scream as its teeth sink into the closing door." << endl << "You feel a thud as you escape unscaved." << endl;
+    
+    //if this option is picked combat is avoided. 
+  }
+  return choice;
+}
+int encounter8()
+{
+  //this is a small riddle encoutner where the price for answering wrong is an instant death case. 
+  int select;
+  cout << "**************************************************************"<<endl;
+  cout << "You enter a small stone room lit by candle light. As you look around you notice the the lights slowly start to dim and faid" << endl << "You quickly realize this is a trap and turn around to leave, Just then you notice the room has changed and the door you used to enter is now a blank wall." << endl << " The room is now pitch black, panicing you search for something to light up the room, but your body is frozen stiff." << endl << " The only thing you feel in the cold black darkness is the snesation of dozens of sets of tiny hands slowly creeping up your body." << endl << "They slowly make their way up to your head where you hear somthing whisper in your ear in a haunting childlike voice." << endl;
+  cout <<endl;
+
+  cout<< "it speaks to say:"<<endl;
+
+  cout << "To pass this room with your soul, a riddle must you best as your toll. " << endl << "This test has claimed many lives, we truly hope you can survive." << endl;
+
+  cout<< endl;
+  cout << "What falls but never breaks, and what breaks but never falls?" <<endl;
+  cout << "1.) Day" << endl;
+  cout << "2.) Night" << endl;
+  cout << "3.) A river" << endl;
+  cout << "4.) A sword" << endl;
+  cout << "**************************************************************"<<endl;
+  cin >> select;
+
+  //input validation for answer
+  while(select != 1 && select != 2 && select != 3 && select != 4){
+    cout<<"You must choose 1, 2, 3, or 4. Try again: "<<endl;
+    cin>>select;
+  }
+  if(select == 1)
+  {
+    cout <<"As the answer leaves your lips you hear dozens of tiny voices start to laugh in the darkness." <<endl;
+
+    cout <<"WRONG! They all scream in unison as you feel the tiny hands begin to move rapidly ripping at your flesh and bone." <<endl;
+
+    cout << "The last thing you feel is sinsation of your flesh tearing and your bones snapping and you hear the childlike laughter as your consciousness leave you." <<endl;
+  }
+  if(select == 2)
+  {
+    cout <<"As the answer leaves your lips you hear dozens of tiny voices start to laugh in the darkness." <<endl;
+
+    cout <<"CORRECT! They all scream in unison as you feel the tiny hands begin to move rapidly leaving your body." <<endl;
+
+    cout << "The lights in the room slowly begin to come back as if they had never been snuffed in the first place." <<endl;
+
+    cout << "There is no sign of your captors and the room's doors have returned." << endl << "You leave the room unharmed!" << endl;
+  }
+  if(select == 3)
+  {
+    cout <<"As the answer leaves your lips you hear dozens of tiny voices start to laugh in the darkness." <<endl;
+
+    cout <<"WRONG! They all scream in unison as you feel the tiny hands begin to move rapidly ripping at your flesh and bone." <<endl;
+
+    cout << "The last thing you feel is sinsation of your flesh tearing and your bones snapping and you hear the childlike laughter as your consciousness leave you." <<endl;
+  }
+  if(select == 4)
+  {
+    cout <<"As the answer leaves your lips you hear dozens of tiny voices start to laugh in the darkness." <<endl;
+
+    cout <<"WRONG! They all scream in unison as you feel the tiny hands begin to move rapidly ripping at your flesh and bone." <<endl;
+
+    cout << "The last thing you feel is sinsation of your flesh tearing and your bones snapping and you hear the childlike laughter as your consciousness leave you." <<endl;
+  }
+  return select;
+}
+void finalencounter()
+{
+  cout << "**************************************************************"<<endl;
+  //display the encounter with the dragon.
+  cout << "You leave the previous rooms behind you and finally make it to your destination. The hoard room of the dragon." <<endl << "The room before you opens up into a massive open cave with rocks from floor to ceiling forming pillars of jagged stone." <<endl << "Looking around you see filling the area with glittering lights are thousands upon thousands of riches filling the cave." <<endl << "Gold coins, rare gemstones, suits of armor, and other unknown richs pile up in this cave so much that the cave floor cannot be seen." <<endl;
+  cout << endl;
+  cout << "Then in a flash you see a huge stir in the pile of coins around 100 feet away from you." << endl << "Shifting like a whale out of water you see the crimson scaly hide of an adult red dragon emurge from beneath the center of the riches." << endl << "It reels up and stands at height of at least 150 feet with its head touching the very top of the cave. And its long body streaches to 120 feet from nose to tail." <<endl;
+  cout << endl;
+  cout << "It streches out its arms and legs on all fours reveiling massive scars all throughout its body from countless battles and appears to of just awoke from a short slumber." << "You mask your presence attempting to hide away from the dragons gaze, though it is in vain as in a low gravely voice that shakes the room you hear the dragon speak." << endl;
+  cout << endl;
+  cout << "Adventurer, do not attempt to hide. I've known of you since the very moment you walked into my dungeon. You have come seeking to claim my vast riches. Let it be known that I will not let you take a single coin from this place. You will perish like the rest of your kind, beneath me, and screaming." << endl; 
+  cout << endl;
+  cout << "With a thunderous roar the dragon extends its wings and races across its hoards of gold to meet you. THE FINAL BATTLE HAS BEGUN!" << endl;
+  cout << "**************************************************************"<<endl;
+  //this being the final encoutner there will be a huge text dump discrbing the start of the battle and then it will go into a simple combat encounter. At the end of the day it doesnt have to be balanced. Just functional.
+}
